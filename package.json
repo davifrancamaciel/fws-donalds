@@ -6,11 +6,6 @@
     "dev": "next dev",
     "build": "next build",
     "deploy": "next build",
-    
-    "stack:dev_create": "aws cloudformation create-stack --stack-name services-integrator-toten-dev --template-body file://stack.yml --parameters ParameterKey=BucketPrefix,ParameterValue=services-integrator-toten-dev --region us-east-1 --profile services_integrator",
-    "stack:dev_update": "aws cloudformation update-stack --stack-name services-integrator-toten-dev --template-body file://stack.yml --parameters ParameterKey=BucketPrefix,ParameterValue=services-integrator-toten-dev --region us-east-1 --profile services_integrator",
-    "deploy:dev": "next build && aws s3 sync .next s3://services-integrator-toten-dev --region us-east-1 --profile services_integrator",
-
     "start": "next start",
     "lint": "next lint",
     "prisma:migrate": "npx prisma migrate dev",
@@ -28,6 +23,7 @@
     "@radix-ui/react-scroll-area": "^1.2.2",
     "@radix-ui/react-separator": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.2",
+    "axios": "^1.8.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.474.0",

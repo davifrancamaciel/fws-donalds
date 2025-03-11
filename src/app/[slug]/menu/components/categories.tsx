@@ -1,6 +1,5 @@
 "use client";
 
-import { Prisma } from "@prisma/client";
 import { ClockIcon } from "lucide-react";
 import Image from "next/image";
 import { useContext, useState } from "react";
@@ -14,36 +13,34 @@ import CartSheet from "./cart-sheet";
 import Products from "./products";
 
 interface RestaurantCategoriesProps {
-  restaurant: Prisma.RestaurantGetPayload<{
-    include: {
-      menuCategories: {
-        include: { products: true };
-      };
-    };
-  }>;
+  restaurant: any;
+  menuCategories: Array<CategoriesProps>;
+}
+interface CategoriesProps {
+  name: string;
+  id: number;
+  products: Array<any>;
 }
 
-type MenuCategoriesWithProducts = Prisma.MenuCategoryGetPayload<{
-  include: { products: true };
-}>;
-
 const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
-  const [selectedCategory, setSelectedCategory] =
-    useState<MenuCategoriesWithProducts>(restaurant.menuCategories[0]);
+  const [selectedCategory, setSelectedCategory] = useState<CategoriesProps>(
+    restaurant.menuCategories[0],
+  );
   const { products, total, toggleCart, totalQuantity } =
     useContext(CartContext);
-  const handleCategoryClick = (category: MenuCategoriesWithProducts) => {
+  const handleCategoryClick = (category: CategoriesProps) => {
     setSelectedCategory(category);
   };
-  const getCategoryButtonVariant = (category: MenuCategoriesWithProducts) => {
+  const getCategoryButtonVariant = (category: CategoriesProps) => {
     return selectedCategory.id === category.id ? "default" : "secondary";
   };
+
   return (
     <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl bg-white">
       <div className="p-5">
         <div className="flex items-center gap-3">
           <Image
-            src={restaurant.avatarImageUrl}
+            src={restaurant.image}
             alt={restaurant.name}
             height={45}
             width={45}
@@ -53,15 +50,23 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
             <p className="text-xs opacity-55">{restaurant.description}</p>
           </div>
         </div>
-        <div className="mt-3 flex items-center gap-1 text-xs text-green-500">
-          <ClockIcon size={12} />
-          <p>Aberto!</p>
-        </div>
+        {restaurant.open && (
+          <div className="mt-3 flex items-center gap-1 text-xs text-green-500">
+            <ClockIcon size={12} />
+            <p>Aberto!</p>
+          </div>
+        )}
+        {!restaurant.open && (
+          <div className="mt-3 flex items-center gap-1 text-xs text-red-500">
+            <ClockIcon size={12} />
+            <p>Fechado!</p>
+          </div>
+        )}
       </div>
 
       <ScrollArea className="w-full">
         <div className="flex w-max space-x-4 p-4 pt-0">
-          {restaurant.menuCategories.map((category) => (
+          {restaurant.menuCategories.map((category: CategoriesProps) => (
             <Button
               onClick={() => handleCategoryClick(category)}
               key={category.id}

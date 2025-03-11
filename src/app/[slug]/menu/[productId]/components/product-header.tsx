@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 interface ProductHeaderProps {
-  product: Pick<Product, "name" | "imageUrl">;
+  product: Pick<Product, "name" | "image">;
 }
 
 const ProductHeader = ({ product }: ProductHeaderProps) => {
@@ -28,7 +28,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
       </Button>
 
       <Image
-        src={product.imageUrl}
+        src={product.image}
         alt={product.name}
         fill
         className="object-contain"

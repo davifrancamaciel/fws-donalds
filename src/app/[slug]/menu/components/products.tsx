@@ -1,4 +1,3 @@
-import { Product } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
@@ -6,7 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { formatCurrency } from "@/helpers/format-currency";
 
 interface ProductsProps {
-  products: Product[];
+  products: any[];
 }
 
 const Products = ({ products }: ProductsProps) => {
@@ -35,10 +34,11 @@ const Products = ({ products }: ProductsProps) => {
           {/* DIREITA */}
           <div className="relative min-h-[82px] min-w-[120px]">
             <Image
-              src={product.imageUrl}
+              src={product.image}
               alt={product.name}
-              fill
               className="rounded-lg object-contain"
+              width={82}
+              height={82}
             />
           </div>
         </Link>

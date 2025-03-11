@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 
-import { db } from "@/lib/prisma";
-
 import RestaurantCategories from "./components/categories";
 import RestaurantHeader from "./components/header";
+
+import api from "../../../services/api";
 
 interface RestaurantMenuPageProps {
   params: Promise<{ slug: string }>;
@@ -23,14 +23,13 @@ const RestaurantMenuPage = async ({
   if (!isConsumptionMethodValid(consumptionMethod)) {
     return notFound();
   }
-  const restaurant = await db.restaurant.findUnique({
-    where: { slug },
-    include: {
-      menuCategories: {
-        include: { products: true },
-      },
-    },
-  });
+  
+  const responseRestaurant = await api.get(`/companies/public/${slug}`);
+  const restaurant = responseRestaurant.data;
+  
+  const responseProducts = await api.get(`/products/public/${restaurant.id}`);
+  restaurant.menuCategories = responseProducts.data;
+  
   if (!restaurant) {
     return notFound();
   }
@@ -43,5 +42,3 @@ const RestaurantMenuPage = async ({
 };
 
 export default RestaurantMenuPage;
-
-// http://localhost:3000/fsw-donalds/menu?consumptionMethod=dine_in

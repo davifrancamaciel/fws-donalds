@@ -1,6 +1,5 @@
 "use client";
 
-import { Prisma } from "@prisma/client";
 import { ChefHatIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
 import { useContext, useState } from "react";
@@ -12,20 +11,7 @@ import { formatCurrency } from "@/helpers/format-currency";
 import CartSheet from "../../components/cart-sheet";
 import { CartContext } from "../../contexts/cart";
 
-interface ProductDetailsProps {
-  product: Prisma.ProductGetPayload<{
-    include: {
-      restaurant: {
-        select: {
-          name: true;
-          avatarImageUrl: true;
-        };
-      };
-    };
-  }>;
-}
-
-const ProductDetails = ({ product }: ProductDetailsProps) => {
+const ProductDetails = ({ product }: any) => {
   const { toggleCart, addProduct } = useContext(CartContext);
   const [quantity, setQuantity] = useState<number>(1);
   const handleDecreaseQuantity = () => {
@@ -53,7 +39,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           {/* RESTAURANTE */}
           <div className="flex items-center gap-1.5">
             <Image
-              src={product.restaurant.avatarImageUrl}
+              src={product.restaurant.image}
               alt={product.restaurant.name}
               width={16}
               height={16}
@@ -107,7 +93,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
                 <h4 className="font-semibold">Ingredientes</h4>
               </div>
               <ul className="text-muted-fo list-disc px-5 text-sm text-muted-foreground">
-                {product.ingredients.map((ingredient) => (
+                {product.description.split(",").map((ingredient: string) => (
                   <li key={ingredient}>{ingredient}</li>
                 ))}
               </ul>

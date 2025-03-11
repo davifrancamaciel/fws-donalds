@@ -1,10 +1,11 @@
 "use client";
 
-import { Product } from "@prisma/client";
 import { createContext, ReactNode, useState } from "react";
-
-export interface CartProduct
-  extends Pick<Product, "id" | "name" | "price" | "imageUrl"> {
+export interface CartProduct {
+  id: number;
+  name: string;
+  price: number;
+  image: number;
   quantity: number;
 }
 
@@ -15,9 +16,9 @@ export interface ICartContext {
   totalQuantity: number;
   toggleCart: () => void;
   addProduct: (product: CartProduct) => void;
-  decreaseProductQuantity: (productId: string) => void;
-  increaseProductQuantity: (productId: string) => void;
-  removeProduct: (productId: string) => void;
+  decreaseProductQuantity: (productId: number) => void;
+  increaseProductQuantity: (productId: number) => void;
+  removeProduct: (productId: number) => void;
 }
 
 export const CartContext = createContext<ICartContext>({
@@ -64,7 +65,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       });
     });
   };
-  const decreaseProductQuantity = (productId: string) => {
+  const decreaseProductQuantity = (productId: number) => {
     setProducts((prevProducts) => {
       return prevProducts.map((prevProduct) => {
         if (prevProduct.id !== productId) {
@@ -77,7 +78,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       });
     });
   };
-  const increaseProductQuantity = (productId: string) => {
+  const increaseProductQuantity = (productId: number) => {
     setProducts((prevProducts) => {
       return prevProducts.map((prevProduct) => {
         if (prevProduct.id !== productId) {
@@ -87,7 +88,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       });
     });
   };
-  const removeProduct = (productId: string) => {
+  const removeProduct = (productId: number) => {
     setProducts((prevProducts) =>
       prevProducts.filter((prevProduct) => prevProduct.id !== productId),
     );
