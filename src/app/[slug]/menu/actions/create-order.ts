@@ -38,7 +38,7 @@ export const createOrder = async (input: CreateOrderInput) => {
   const productsWithPricesAndQuantities = input.products.map((product) => ({
     productId: product.id,
     quantity: product.quantity,
-    price: productsWithPrices.find((p) => p.id === product.id)!.price,
+    price: productsWithPrices.find((p) => Number(p.id) === product.id)!.price,
   }));
   await db.order.create({
     data: {
