@@ -31,7 +31,7 @@ export const createOrder = async (input: CreateOrderInput) => {
   const productsWithPrices = await db.product.findMany({
     where: {
       id: {
-        in: input.products.map((product) => product.id),
+        in: input.products.map((product) => product.id.toString()),
       },
     },
   });
