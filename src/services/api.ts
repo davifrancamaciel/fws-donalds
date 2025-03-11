@@ -1,4 +1,4 @@
-import { Response } from "helpers/commonInterfaces";
+import { Response } from "../helpers/commonInterfaces";
 
 const api = {
   get: (url: string): Promise<Response> => {

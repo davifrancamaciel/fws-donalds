@@ -12,15 +12,8 @@ import { CartContext } from "../contexts/cart";
 import CartSheet from "./cart-sheet";
 import Products from "./products";
 
-interface RestaurantCategoriesProps {
-  restaurant: any;
-  menuCategories: Array<CategoriesProps>;
-}
-interface CategoriesProps {
-  name: string;
-  id: number;
-  products: Array<any>;
-}
+
+
 
 const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
   const [selectedCategory, setSelectedCategory] = useState<CategoriesProps>(

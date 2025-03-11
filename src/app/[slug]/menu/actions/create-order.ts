@@ -40,24 +40,24 @@ export const createOrder = async (input: CreateOrderInput) => {
     quantity: product.quantity,
     price: productsWithPrices.find((p) => Number(p.id) === product.id)!.price,
   }));
-  await db.order.create({
-    data: {
-      status: "PENDING",
-      customerName: input.customerName,
-      customerCpf: removeCpfPunctuation(input.customerCpf),
-      orderProducts: {
-        createMany: {
-          data: productsWithPricesAndQuantities,
-        },
-      },
-      total: productsWithPricesAndQuantities.reduce(
-        (acc, product) => acc + product.price * product.quantity,
-        0,
-      ),
-      consumptionMethod: input.consumptionMethod,
-      restaurantId: restaurant.id,
-    },
-  });
+  // await db.order.create({
+  //   data: {
+  //     status: "PENDING",
+  //     customerName: input.customerName,
+  //     customerCpf: removeCpfPunctuation(input.customerCpf),
+  //     orderProducts: {
+  //       createMany: {
+  //         data: productsWithPricesAndQuantities,
+  //       },
+  //     },
+  //     total: productsWithPricesAndQuantities.reduce(
+  //       (acc, product) => acc + product.price * product.quantity,
+  //       0,
+  //     ),
+  //     consumptionMethod: input.consumptionMethod,
+  //     restaurantId: restaurant.id,
+  //   },
+  // });
   revalidatePath(`/${input.slug}/orders`);
   redirect(
     `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`,
