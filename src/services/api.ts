@@ -1,4 +1,3 @@
-import axios from "../../node_modules/axios/index";
 import { Response } from "helpers/commonInterfaces";
 
 const api = {
@@ -27,9 +26,9 @@ const request = async (
   /**
    * Definição da chamada das requests axios
    */
-  
+
   try {
-    let config = {
+    const config = {
       method: method,
       headers: {
         "Content-Type": "application/json",
