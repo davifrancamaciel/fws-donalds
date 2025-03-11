@@ -1,42 +1,21 @@
 import axios from "../../node_modules/axios/index";
-import { NextResponse } from "next/server";
 import { Response } from "helpers/commonInterfaces";
-// import {
-//   localStorageGetItem,
-//   localStorageRemoveItem
-// } from '../utils/localStorage';
-// import { KEY_STORAGE } from './defaultValues';
 
 const api = {
-  get: (url: string, showNotification: boolean = true): Promise<Response> => {
-    return request("GET", url, null, showNotification);
+  get: (url: string): Promise<Response> => {
+    return request("GET", url, null);
   },
-  post: (
-    url: string,
-    data: any,
-    showNotification: boolean = true,
-  ): Promise<Response> => {
-    return request("POST", url, data, showNotification);
+  post: (url: string, data: any): Promise<Response> => {
+    return request("POST", url, data);
   },
-  put: (
-    url: string,
-    data: any,
-    showNotification: boolean = true,
-  ): Promise<Response> => {
-    return request("PUT", url, data, showNotification);
+  put: (url: string, data: any): Promise<Response> => {
+    return request("PUT", url, data);
   },
-  delete: (
-    url: string,
-    showNotification: boolean = true,
-  ): Promise<Response> => {
-    return request("DELETE", url, showNotification);
+  delete: (url: string): Promise<Response> => {
+    return request("DELETE", url);
   },
-  patch: (
-    url: string,
-    data: any,
-    showNotification: boolean = true,
-  ): Promise<Response> => {
-    return request("PATCH", url, data, showNotification);
+  patch: (url: string, data: any): Promise<Response> => {
+    return request("PATCH", url, data);
   },
 };
 
@@ -44,21 +23,11 @@ const request = async (
   method: "POST" | "GET" | "PUT" | "DELETE" | "PATCH",
   url: string,
   data: any = null,
-  showNotification: boolean = true,
 ): Promise<Response> => {
   /**
    * Definição da chamada das requests axios
    */
-  const token = ""; //localStorageGetItem(KEY_STORAGE);
-  const Authorization = token ? `Bearer ${token}` : "";
-
-  const apiAxios = axios.create({
-    baseURL: process.env.REACT_APP_BASE_URL_API || "",
-    headers: {
-      "Content-type": "application/json",
-      // Authorization,
-    },
-  });
+  
   try {
     let config = {
       method: method,
@@ -68,7 +37,7 @@ const request = async (
       //body: {},
     };
     // if (method === "POST") config["body"] = JSON.stringify(data);
-    
+
     const res = await fetch(
       `${process.env.REACT_APP_BASE_URL_API}/${url}`,
       config,
@@ -78,23 +47,6 @@ const request = async (
     console.log(datares);
 
     return datares;
-
-    const response = await apiAxios({ method, url, data });
-
-    // if (showNotification) {
-    //   if (response.data.success)
-    //     notification.success({
-    //       message: response.data.message,
-    //       placement: 'topRight'
-    //     });
-    //   else
-    //     notification.error({
-    //       message: response.data.message,
-    //       placement: 'topRight'
-    //     });
-    // }
-
-    return response.data;
   } catch (e: any) {
     if (e && e.response && e.response.status === 401) {
       //localStorageRemoveItem(KEY_STORAGE);
