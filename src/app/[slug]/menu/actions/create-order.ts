@@ -12,7 +12,7 @@ interface CreateOrderInput {
   customerName: string;
   customerCpf: string;
   products: Array<{
-    id: string;
+    id: number;
     quantity: number;
   }>;
   consumptionMethod: ConsumptionMethod;
