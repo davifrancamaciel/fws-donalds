@@ -86,12 +86,10 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
         onOpenChange(false);
         toast.success("Pedido finalizado com sucesso!");
         const sendPhone = products[0].restaurant.phone;
-        const propMessage = `Olá eu meu nome é *${data.name}*%0a%0a
-                             Gostaria de fazer o seguinte pedido%0a
-
-                             ${products.map((x) => `${x.quantity} ${x.name}%0a`)}
-                             
-                             para *${consumptionMethod === "DINE_IN" ? "RETIRAR NA LOJA" : "ENTREGAR"}*`;
+        const propMessage = `Olá eu meu nome é *${data.name}*
+         Gostaria de fazer o seguinte pedido 
+         ${products.map((x) => `${x.quantity} ${x.name}\n`)}
+         Para *${consumptionMethod === "DINE_IN" ? "RETIRAR NA LOJA" : "ENTREGA"}*`;
         window.location.href = `https://api.whatsapp.com/send?phone=55${sendPhone}&text=${propMessage}`;
       });
     } catch (error) {
