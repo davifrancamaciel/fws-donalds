@@ -1,12 +1,8 @@
 "use client";
 
 import { createContext, ReactNode, useState } from "react";
-export interface CartProduct {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
+export interface CartProduct extends Product{
+    quantity: number;
 }
 
 export interface ICartContext {

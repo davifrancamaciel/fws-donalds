@@ -28,14 +28,19 @@ const request = async (
    */
 
   try {
-    const config = {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      //body: {},
-    };
-    // if (method === "POST") config["body"] = JSON.stringify(data);
+    let config = {};
+    if (method === "POST" || method === "PUT") {
+      config = {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      };
+    } else {
+      config = {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+      };
+    }
 
     const res = await fetch(
       `${process.env.REACT_APP_BASE_URL_API}/${url}`,

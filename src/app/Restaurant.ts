@@ -9,6 +9,18 @@ interface Restaurant {
   description: string;
 }
 
+interface Product {
+  name: string;
+  id: number;
+  price: number;
+  image: string;
+  companyId: string;
+  open: boolean;
+  banner: string;
+  description: string;
+  restaurant: Restaurant;
+}
+
 interface RestaurantCategories extends Restaurant {
   menuCategories: Array<CategoriesProps>;
 }

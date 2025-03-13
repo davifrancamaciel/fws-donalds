@@ -18,8 +18,8 @@ const ProductPage = async ({ params }: ProductPageProps) => {
   const responseProducts = await api.get(
     `/products/public/${restaurant.id}/${productId}`,
   );
-  const product = responseProducts.data;
-  product.restaurant = restaurant;;
+  const product: Product = responseProducts.data;
+  product.restaurant = restaurant;
 
   if (!product) {
     return notFound();

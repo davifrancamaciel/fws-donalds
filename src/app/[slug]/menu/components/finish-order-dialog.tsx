@@ -61,12 +61,11 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
   const { slug } = useParams<{ slug: string }>();
   const { products } = useContext(CartContext);
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      cpf: "",
     },
     shouldUnregister: true,
   });
@@ -75,21 +74,29 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
       const consumptionMethod = searchParams.get(
         "consumptionMethod",
       ) as ConsumptionMethod;
+
       startTransition(async () => {
         await createOrder({
           consumptionMethod,
-          customerCpf: data.cpf,
+          
           customerName: data.name,
           products,
           slug,
         });
         onOpenChange(false);
         toast.success("Pedido finalizado com sucesso!");
-      })
-     
-  
+        const sendPhone = products[0].restaurant.phone;
+        const propMessage = `Olá eu meu nome é *${data.name}*%0a%0a
+                             Gostaria de fazer o seguinte pedido%0a
+
+                             ${products.map((x) => `${x.quantity} ${x.name}%0a`)}
+                             
+                             para *${consumptionMethod === "DINE_IN" ? "RETIRAR NA LOJA" : "ENTREGAR"}*`;
+        window.location.href = `https://api.whatsapp.com/send?phone=55${sendPhone}&text=${propMessage}`;
+      });
     } catch (error) {
       console.error(error);
+      toast.error("Ocorreu um erro ao enviar seu pedido");
     }
   };
   return (
@@ -144,7 +151,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
                   className="rounded-full"
                   disabled={isPending}
                 >
-                  {isPending && <Loader2Icon className="animate-spin"/>}
+                  {isPending && <Loader2Icon className="animate-spin" />}
                   Finalizar
                 </Button>
                 <DrawerClose asChild>
