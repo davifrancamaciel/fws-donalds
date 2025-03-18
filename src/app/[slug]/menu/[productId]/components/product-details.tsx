@@ -93,9 +93,12 @@ const ProductDetails = ({ product }: any) => {
                 <h4 className="font-semibold">Ingredientes</h4>
               </div>
               <ul className="text-muted-fo list-disc px-5 text-sm text-muted-foreground">
-                {product.description.split(",").map((ingredient: string) => (
-                  <li key={ingredient}>{ingredient}</li>
-                ))}
+                {product.description &&
+                  product.description
+                    .split(",")
+                    .map((ingredient: string) => (
+                      <li key={ingredient}>{ingredient}</li>
+                    ))}
               </ul>
             </div>
           </ScrollArea>
