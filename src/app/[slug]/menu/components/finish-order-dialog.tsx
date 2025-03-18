@@ -61,7 +61,7 @@ interface FinishOrderDialogProps {
 
 const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
   const { slug } = useParams<{ slug: string }>();
-  const { products, clearCart } = useContext(CartContext);
+  const { products, clearCart,toggleCart } = useContext(CartContext);
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const form = useForm<FormSchema>({
@@ -101,6 +101,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
         const propMessage = `Olá eu meu nome é *${data.name}*%0A%0AGostaria de fazer o seguinte pedido%0A
         ${products.map((x) => `%0A${x.quantity} ${x.name}`)}%0A%0APara *${consumptionMethod === "DINE_IN" ? "RETIRAR NA LOJA" : "ENTREGA"}*`;
         clearCart();
+        toggleCart();
         window.location.href = `https://api.whatsapp.com/send?phone=55${sendPhone}&text=${propMessage}%0APedido: ${resp.id}`;
       });
     } catch (error) {
