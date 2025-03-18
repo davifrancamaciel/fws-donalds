@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, ReactNode, useState } from "react";
-export interface CartProduct extends Product{
-    quantity: number;
+export interface CartProduct extends Product {
+  quantity: number;
 }
 
 export interface ICartContext {
@@ -11,6 +11,7 @@ export interface ICartContext {
   total: number;
   totalQuantity: number;
   toggleCart: () => void;
+  clearCart: () => void;
   addProduct: (product: CartProduct) => void;
   decreaseProductQuantity: (productId: number) => void;
   increaseProductQuantity: (productId: number) => void;
@@ -23,6 +24,7 @@ export const CartContext = createContext<ICartContext>({
   totalQuantity: 0,
   products: [],
   toggleCart: () => {},
+  clearCart: () => {},
   addProduct: () => {},
   decreaseProductQuantity: () => {},
   increaseProductQuantity: () => {},
@@ -41,6 +43,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, 0);
   const toggleCart = () => {
     setIsOpen((prev) => !prev);
+  };
+  const clearCart = () => {
+    setProducts([]);
   };
   const addProduct = (product: CartProduct) => {
     const productIsAlreadyOnTheCart = products.some(
@@ -95,6 +100,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         isOpen,
         products,
         toggleCart,
+        clearCart,
         addProduct,
         decreaseProductQuantity,
         increaseProductQuantity,

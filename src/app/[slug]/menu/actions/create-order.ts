@@ -1,15 +1,14 @@
 "use server";
 
 import { ConsumptionMethod } from "@prisma/client";
-// import { revalidatePath } from "next/cache";
-// import { redirect } from "next/navigation";
 
-// import { removeCpfPunctuation } from "../helpers/cpf";
 import { CartProduct } from "../contexts/cart";
 import api from "../../../../services/api";
 
 interface CreateOrderInput {
-  customerName: string;
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
   products: Array<CartProduct>;
   consumptionMethod: ConsumptionMethod;
   slug: string;
@@ -23,15 +22,13 @@ export const createOrder = async (input: CreateOrderInput) => {
     })),
     companyId: input.products[0].restaurant.id,
     note: input.consumptionMethod === "DINE_IN" ? "PEGAR NO LOCAL" : "ENTREGAR",
+    clientName: input.clientName,
+    clientEmail: input.clientEmail,
+    clientPhone: input.clientPhone,
   };
 
-  data.note = `${data.note}\nCliente ${input.customerName}`;
+  data.note = `${data.note}\nCliente ${input.clientName}`;
   const resp = await api.post(`/sales/public`, data);
 
-  console.log(resp);
-
-  // revalidatePath(`/${input.slug}/orders`);
-  // redirect(
-  //   `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`,
-  // );
+  return resp.data;
 };

@@ -32,7 +32,10 @@ const Products = ({ products }: ProductsProps) => {
           </div>
 
           {/* DIREITA */}
-          <div className="relative min-h-[82px] min-w-[120px]">
+          <div
+            className="relative min-h-[82px] min-w-[120px]"
+            style={{ display: "flex", justifyContent: "end" }}
+          >
             <Image
               src={product.image}
               alt={product.name}

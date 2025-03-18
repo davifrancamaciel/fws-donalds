@@ -26,18 +26,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { isValidCpf, removeCpfPunctuation } from "../../menu/helpers/cpf";
+import { removeCpfPunctuation } from "../../menu/helpers/cpf";
 
 const formSchema = z.object({
-  cpf: z
-    .string()
-    .trim()
-    .min(1, {
-      message: "O CPF é obrigatório.",
-    })
-    .refine((value) => isValidCpf(value), {
-      message: "CPF inválido.",
-    }),
+  phone: z.string().trim().min(1, {
+    message: "O whatsapp é obrigatório.",
+  }),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -49,7 +43,7 @@ const CpfForm = () => {
   const router = useRouter();
   const pathname = usePathname();
   const onSubmit = (data: FormSchema) => {
-    router.replace(`${pathname}?cpf=${removeCpfPunctuation(data.cpf)}`);
+    router.replace(`${pathname}?phone=${removeCpfPunctuation(data.phone)}`);
   };
   const handleCancel = () => {
     router.back();
@@ -60,7 +54,7 @@ const CpfForm = () => {
         <DrawerHeader>
           <DrawerTitle>Visualizar Pedidos</DrawerTitle>
           <DrawerDescription>
-            Insira seu CPF abaixo para visualizar seus pedidos.
+            Insira seu Whatsapp abaixo para visualizar seus pedidos.
           </DrawerDescription>
         </DrawerHeader>
 
@@ -68,14 +62,14 @@ const CpfForm = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="cpf"
+              name="phone"
               render={({ field }) => (
-                <FormItem className="px-4">
-                  <FormLabel>Seu CPF</FormLabel>
+                <FormItem>
+                  <FormLabel>Seu Whatsapp</FormLabel>
                   <FormControl>
                     <PatternFormat
-                      placeholder="Digite seu CPF..."
-                      format="###.###.###-##"
+                      placeholder="Digite seu Whatsapp..."
+                      format="(##) #####-####"
                       customInput={Input}
                       {...field}
                     />

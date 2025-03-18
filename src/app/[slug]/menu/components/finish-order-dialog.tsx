@@ -10,6 +10,10 @@ import { PatternFormat } from "react-number-format";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { removeCpfPunctuation } from "../helpers/cpf";
+// import { revalidatePath } from "next/cache";
+// import { redirect } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -33,21 +37,19 @@ import { Input } from "@/components/ui/input";
 
 import { createOrder } from "../actions/create-order";
 import { CartContext } from "../contexts/cart";
-import { isValidCpf } from "../helpers/cpf";
+// import { isValidCpf } from "../helpers/cpf";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, {
     message: "O nome é obrigatório.",
   }),
-  cpf: z
-    .string()
-    .trim()
-    .min(1, {
-      message: "O CPF é obrigatório.",
-    })
-    .refine((value) => isValidCpf(value), {
-      message: "CPF inválido.",
-    }),
+  email: z.string(),
+  phone: z.string().trim().min(1, {
+    message: "O Whatsapp é obrigatório.",
+  }),
+  // .refine((value) => isValidCpf(value), {
+  //   message: "Whatsapp inválido.",
+  // }),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -59,13 +61,15 @@ interface FinishOrderDialogProps {
 
 const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
   const { slug } = useParams<{ slug: string }>();
-  const { products } = useContext(CartContext);
+  const { products, clearCart } = useContext(CartContext);
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      phone: "",
+      email: "",
     },
     shouldUnregister: true,
   });
@@ -75,20 +79,29 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
         "consumptionMethod",
       ) as ConsumptionMethod;
 
+      const email = data.email
+        ? data.email
+        : `${removeCpfPunctuation(data.phone)}@emai.com`;
       startTransition(async () => {
-        await createOrder({
+        const resp = await createOrder({
           consumptionMethod,
-          
-          customerName: data.name,
+          clientName: data.name,
+          clientEmail: email,
+          clientPhone: removeCpfPunctuation(data.phone),
           products,
           slug,
         });
         onOpenChange(false);
+        // revalidatePath(`/${input.slug}/orders`);
+        // redirect(
+        //   `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`,
+        // );
         toast.success("Pedido finalizado com sucesso!");
         const sendPhone = products[0].restaurant.phone;
         const propMessage = `Olá eu meu nome é *${data.name}*%0A%0AGostaria de fazer o seguinte pedido%0A
         ${products.map((x) => `%0A${x.quantity} ${x.name}`)}%0A%0APara *${consumptionMethod === "DINE_IN" ? "RETIRAR NA LOJA" : "ENTREGA"}*`;
-        window.location.href = `https://api.whatsapp.com/send?phone=55${sendPhone}&text=${propMessage}`;
+        clearCart();
+        window.location.href = `https://api.whatsapp.com/send?phone=55${sendPhone}&text=${propMessage}%0APedido: ${resp.id}`;
       });
     } catch (error) {
       console.error(error);
@@ -123,17 +136,31 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
               />
               <FormField
                 control={form.control}
-                name="cpf"
+                name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Seu CPF</FormLabel>
+                    <FormLabel>Seu Whatsapp</FormLabel>
                     <FormControl>
                       <PatternFormat
-                        placeholder="Digite seu CPF..."
-                        format="###.###.###-##"
+                        placeholder="Digite seu Whatsapp..."
+                        format="(##) #####-####"
                         customInput={Input}
                         {...field}
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Seu Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Digite seu Email..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
